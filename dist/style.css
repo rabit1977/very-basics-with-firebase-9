@@ -4,14 +4,16 @@
   flex-direction: column;
   margin: auto;
 }
-.delete {
+.delete,
+.update {
   width: 80%;
   margin: auto;
   display: flex;
   flex-direction: column;
   margin-top: 2rem;
 }
-.delete button {
+.delete button,
+.update button {
   margin-top: 1rem;
 }
 .add button {
