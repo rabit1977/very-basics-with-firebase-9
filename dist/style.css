@@ -1,0 +1,19 @@
+.add {
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+}
+.delete {
+  width: 80%;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  margin-top: 2rem;
+}
+.delete button {
+  margin-top: 1rem;
+}
+.add button {
+  margin-top: 1rem;
+}
