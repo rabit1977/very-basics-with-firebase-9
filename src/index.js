@@ -1,11 +1,18 @@
-import { initializeApp } from 'firebase/app'
+import { initializeApp } from 'firebase/app';
 import {
-  getFirestore, collection, onSnapshot,
-  addDoc, deleteDoc, doc,
-  query, where,
-  orderBy, serverTimestamp,
+  getFirestore,
+  collection,
+  onSnapshot,
+  addDoc,
+  deleteDoc,
+  doc,
+  query,
+  where,
+  orderBy,
+  serverTimestamp,
   getDoc,
-} from 'firebase/firestore'
+  updateDoc,
+} from 'firebase/firestore';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyA2SSM0xzS3yxgll9d54WCKuiyvRHJExJU',
@@ -17,56 +24,58 @@ const firebaseConfig = {
 };
 
 // init firebase
-initializeApp(firebaseConfig)
+initializeApp(firebaseConfig);
 
 // init services
-const db = getFirestore()
+const db = getFirestore();
 
 // collection ref
-const colRef = collection(db, 'books')
+const colRef = collection(db, 'books');
 
 // queries
-const q = query(colRef, where("author", "==", "patrick rothfuss"), orderBy('createdAt'))
+const q = query(
+  colRef,
+  where('author', '==', 'patrick rothfuss'),
+  orderBy('createdAt')
+);
 
 // realtime collection data
 onSnapshot(q, (snapshot) => {
-  let books = []
-  snapshot.docs.forEach(doc => {
-    books.push({ ...doc.data(), id: doc.id })
-  })
-  console.log(books)
-})
+  let books = [];
+  snapshot.docs.forEach((doc) => {
+    books.push({ ...doc.data(), id: doc.id });
+  });
+  console.log(books);
+});
 
 // adding docs
-const addBookForm = document.querySelector('.add')
+const addBookForm = document.querySelector('.add');
 addBookForm.addEventListener('submit', (e) => {
-  e.preventDefault()
+  e.preventDefault();
 
   addDoc(colRef, {
     title: addBookForm.title.value,
     author: addBookForm.author.value,
-    createdAt: serverTimestamp()
-  })
-  .then(() => {
-    addBookForm.reset()
-  })
-})
+    createdAt: serverTimestamp(),
+  }).then(() => {
+    addBookForm.reset();
+  });
+});
 
 // deleting docs
-const deleteBookForm = document.querySelector('.delete')
+const deleteBookForm = document.querySelector('.delete');
 deleteBookForm.addEventListener('submit', (e) => {
-  e.preventDefault()
+  e.preventDefault();
 
-  const docRef = doc(db, 'books', deleteBookForm.id.value)
+  const docRef = doc(db, 'books', deleteBookForm.id.value);
 
-  deleteDoc(docRef)
-    .then(() => {
-      deleteBookForm.reset()
-    })
-})
+  deleteDoc(docRef).then(() => {
+    deleteBookForm.reset();
+  });
+});
 
 // fetching a single document (& realtime)
-const docRef = doc(db, 'books', 'gGu4P9x0ZHK9SspA1d9j')
+const docRef = doc(db, 'books', 'gGu4P9x0ZHK9SspA1d9j');
 
 // getDoc(docRef)
 //   .then(doc => {
@@ -74,5 +83,18 @@ const docRef = doc(db, 'books', 'gGu4P9x0ZHK9SspA1d9j')
 //   })
 
 onSnapshot(docRef, (doc) => {
-  console.log(doc.data(), doc.id)
-})
+  console.log(doc.data(), doc.id);
+});
+
+// updating a document
+const updateForm = document.querySelector('.update');
+updateForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const docRef = doc(db, 'books', updateForm.id.value);
+
+  updateDoc(docRef, {
+    title: 'updated title',
+  }).then(() => {
+    updateForm.reset();
+  });
+});
